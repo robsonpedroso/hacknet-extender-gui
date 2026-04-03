@@ -1,0 +1,36 @@
+{
+  "name": "NodePerson",
+  "type": "object",
+  "properties": {
+    "extension_id": {
+      "type": "string"
+    },
+    "node_id": {
+      "type": "string",
+      "description": "ID do n\u00f3 ao qual esta conta pertence"
+    },
+    "username": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    },
+    "account_type": {
+      "type": "string",
+      "enum": [
+        "ADMIN",
+        "ALL",
+        "MAIL",
+        "MISSIONLIST"
+      ],
+      "default": "ALL",
+      "description": "ADMIN=0, ALL=1 (pode deletar), MAIL=2, MISSIONLIST=3"
+    }
+  },
+  "required": [
+    "extension_id",
+    "node_id",
+    "username",
+    "password"
+  ]
+}

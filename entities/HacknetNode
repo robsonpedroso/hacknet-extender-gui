@@ -1,0 +1,128 @@
+{
+  "name": "HacknetNode",
+  "type": "object",
+  "properties": {
+    "extension_id": {
+      "type": "string",
+      "description": "ID da extens\u00e3o pai"
+    },
+    "node_id": {
+      "type": "string",
+      "description": "ID \u00fanico do n\u00f3"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nome de exibi\u00e7\u00e3o do computador"
+    },
+    "ip": {
+      "type": "string",
+      "description": "Endere\u00e7o IP do n\u00f3"
+    },
+    "security_level": {
+      "type": "number",
+      "description": "N\u00edvel de seguran\u00e7a (1-5)"
+    },
+    "ports_required": {
+      "type": "number",
+      "default": 0,
+      "description": "Portas necess\u00e1rias para hack"
+    },
+    "admin_pass": {
+      "type": "string",
+      "description": "Senha de admin"
+    },
+    "has_proxy": {
+      "type": "boolean",
+      "default": false,
+      "description": "Possui proxy"
+    },
+    "proxy_time": {
+      "type": "number",
+      "default": -1,
+      "description": "Tempo do proxy em segundos"
+    },
+    "has_firewall": {
+      "type": "boolean",
+      "default": false,
+      "description": "Possui firewall"
+    },
+    "firewall_level": {
+      "type": "number",
+      "default": -1,
+      "description": "N\u00edvel do firewall"
+    },
+    "firewall_solution": {
+      "type": "string",
+      "description": "Solu\u00e7\u00e3o do firewall"
+    },
+    "trace_time": {
+      "type": "number",
+      "default": -1,
+      "description": "Tempo de rastreamento (-1 para padr\u00e3o)"
+    },
+    "icon": {
+      "type": "string",
+      "enum": [
+        "laptop",
+        "chip",
+        "server",
+        "homepc",
+        "terminal",
+        "ePhone"
+      ],
+      "default": "laptop",
+      "description": "\u00cdcone do n\u00f3"
+    },
+    "node_type": {
+      "type": "string",
+      "enum": [
+        "standard",
+        "corporate",
+        "government",
+        "medical",
+        "isp",
+        "empty"
+      ],
+      "default": "standard",
+      "description": "Tipo do n\u00f3"
+    },
+    "files": {
+      "type": "array",
+      "description": "Arquivos no n\u00f3",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ports": {
+      "type": "array",
+      "description": "Portas abertas",
+      "items": {
+        "type": "object",
+        "properties": {
+          "port_number": {
+            "type": "number"
+          },
+          "cracked": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "extension_id",
+    "node_id",
+    "name"
+  ]
+}

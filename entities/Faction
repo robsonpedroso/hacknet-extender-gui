@@ -1,0 +1,42 @@
+{
+  "name": "Faction",
+  "type": "object",
+  "properties": {
+    "extension_id": {
+      "type": "string",
+      "description": "ID da extens\u00e3o pai"
+    },
+    "faction_id": {
+      "type": "string",
+      "description": "ID \u00fanico da fac\u00e7\u00e3o"
+    },
+    "name": {
+      "type": "string",
+      "description": "Nome da fac\u00e7\u00e3o"
+    },
+    "player_value": {
+      "type": "number",
+      "default": 0,
+      "description": "Valor/reputa\u00e7\u00e3o inicial do jogador"
+    },
+    "max_value": {
+      "type": "number",
+      "default": 100,
+      "description": "Valor m\u00e1ximo de reputa\u00e7\u00e3o"
+    },
+    "neededValue": {
+      "type": "number",
+      "default": 0,
+      "description": "Valor necess\u00e1rio para acessar miss\u00f5es"
+    },
+    "actions_on_join": {
+      "type": "string",
+      "description": "A\u00e7\u00f5es ao entrar na fac\u00e7\u00e3o"
+    }
+  },
+  "required": [
+    "extension_id",
+    "faction_id",
+    "name"
+  ]
+}

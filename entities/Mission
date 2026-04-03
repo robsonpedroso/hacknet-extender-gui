@@ -1,0 +1,104 @@
+{
+  "name": "Mission",
+  "type": "object",
+  "properties": {
+    "extension_id": {
+      "type": "string",
+      "description": "ID da extens\u00e3o pai"
+    },
+    "mission_id": {
+      "type": "string",
+      "description": "ID \u00fanico da miss\u00e3o"
+    },
+    "title": {
+      "type": "string",
+      "description": "T\u00edtulo da miss\u00e3o"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o da miss\u00e3o"
+    },
+    "posting": {
+      "type": "string",
+      "description": "Texto que aparece no board"
+    },
+    "email_sender": {
+      "type": "string",
+      "description": "Remetente do email"
+    },
+    "email_subject": {
+      "type": "string",
+      "description": "Assunto do email"
+    },
+    "email_body": {
+      "type": "string",
+      "description": "Corpo do email"
+    },
+    "target_node_id": {
+      "type": "string",
+      "description": "ID do n\u00f3 alvo"
+    },
+    "goal_type": {
+      "type": "string",
+      "enum": [
+        "filedownload",
+        "filedelete",
+        "filechange",
+        "getadmin",
+        "getstring",
+        "delay",
+        "hasflag"
+      ],
+      "description": "Tipo de objetivo"
+    },
+    "goal_file": {
+      "type": "string",
+      "description": "Arquivo alvo (se aplic\u00e1vel)"
+    },
+    "goal_path": {
+      "type": "string",
+      "description": "Caminho do arquivo alvo"
+    },
+    "goal_keyword": {
+      "type": "string",
+      "description": "Palavra-chave do objetivo"
+    },
+    "next_mission_id": {
+      "type": "string",
+      "description": "ID da pr\u00f3xima miss\u00e3o"
+    },
+    "mission_start": {
+      "type": "string",
+      "description": "Ação de início da miss\u00e3o (path to conditional actions)"
+    },
+    "mission_end": {
+      "type": "string",
+      "description": "Ação de fim da miss\u00e3o"
+    },
+    "email_attachments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Anexos de email"
+    },
+    "posting_title": {
+      "type": "string",
+      "description": "Título do posting do board"
+    },
+    "faction_id": {
+      "type": "string",
+      "description": "ID da fac\u00e7\u00e3o"
+    },
+    "required_rank": {
+      "type": "number",
+      "default": 0,
+      "description": "Rank necess\u00e1rio na fac\u00e7\u00e3o"
+    }
+  },
+  "required": [
+    "extension_id",
+    "mission_id",
+    "title"
+  ]
+}

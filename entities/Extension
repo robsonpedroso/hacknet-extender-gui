@@ -1,0 +1,126 @@
+{
+  "name": "Extension",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nome da extens\u00e3o"
+    },
+    "language": {
+      "type": "string",
+      "enum": [
+        "en-us",
+        "pt-br",
+        "es",
+        "fr",
+        "de",
+        "it",
+        "ja",
+        "ko",
+        "zh-cn",
+        "ru"
+      ],
+      "default": "en-us",
+      "description": "Idioma da extens\u00e3o"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descri\u00e7\u00e3o da extens\u00e3o"
+    },
+    "starting_theme": {
+      "type": "string",
+      "enum": [
+        "green",
+        "white",
+        "yellow",
+        "teal",
+        "base",
+        "purple",
+        "mint"
+      ],
+      "default": "green",
+      "description": "Tema visual inicial"
+    },
+    "starting_music": {
+      "type": "string",
+      "description": "M\u00fasica inicial da extens\u00e3o"
+    },
+    "starting_mission_id": {
+      "type": "string",
+      "description": "ID da primeira miss\u00e3o"
+    },
+    "player_comp_name": {
+      "type": "string",
+      "default": "PlayerComp",
+      "description": "Nome do computador do jogador"
+    },
+    "allow_saves": {
+      "type": "boolean",
+      "default": true,
+      "description": "Permite salvar progresso"
+    },
+    "starting_visible_nodes": {
+      "type": "string",
+      "description": "Lista de nós visíveis inicialmente (vírgula separados)"
+    },
+    "starting_actions": {
+      "type": "string",
+      "description": "Caminho para StartingActions.xml"
+    },
+    "faction": {
+      "type": "string",
+      "description": "ID da facção inicial"
+    },
+    "starts_with_tutorial": {
+      "type": "boolean",
+      "default": false,
+      "description": "Começa com tutorial"
+    },
+    "has_intro_startup": {
+      "type": "boolean",
+      "default": false,
+      "description": "Tem sequência inicial"
+    },
+    "intro_startup_song": {
+      "type": "string",
+      "description": "Nome da música de introdução"
+    },
+    "workshop_description": {
+      "type": "string",
+      "description": "Descrição para Workshop"
+    },
+    "workshop_language": {
+      "type": "string",
+      "description": "Idioma do Workshop"
+    },
+    "workshop_visibility": {
+      "type": "string",
+      "description": "Visibilidade no Workshop (0/1/2)"
+    },
+    "workshop_tags": {
+      "type": "string",
+      "description": "Tags de Workshop"
+    },
+    "workshop_preview_image_path": {
+      "type": "string",
+      "description": "Caminho da imagem de preview"
+    },
+    "workshop_publish_id": {
+      "type": "string",
+      "description": "ID de publicação no Workshop"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "in_progress",
+        "completed"
+      ],
+      "default": "draft",
+      "description": "Status da extens\u00e3o"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
