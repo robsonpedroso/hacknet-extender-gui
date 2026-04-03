@@ -15,12 +15,14 @@ import TerminalHeader from '@/components/shared/TerminalHeader';
 import ExtensionSelector from '@/components/shared/ExtensionSelector';
 import EmptyState from '@/components/shared/EmptyState';
 import DeleteConfirmDialog from '@/components/shared/DeleteConfirmDialog';
+import { useTranslation } from 'react-i18next';
 
 const defaultNode = { node_id: '', name: '', ip: '', security_level: 1, ports_required: 0, ports: [], admin_pass: '', has_proxy: false, proxy_time: -1, has_firewall: false, firewall_level: -1, trace_time: -1, icon: 'laptop', node_type: 'standard', files: [] };
 const iconOptions = ['laptop', 'chip', 'server', 'homepc', 'terminal', 'ePhone'];
 const typeOptions = ['standard', 'corporate', 'government', 'medical', 'isp', 'empty'];
 
 export default function Nodes() {
+  const { t } = useTranslation();
   const urlParams = new URLSearchParams(window.location.search);
   const [selectedExt, setSelectedExt] = useState(urlParams.get('ext') || '');
   const [showForm, setShowForm] = useState(false);
@@ -59,13 +61,13 @@ export default function Nodes() {
   return (
     <div className="min-h-screen">
       <TerminalHeader
-        title="Nós de Rede"
-        subtitle="Computadores e servidores da sua extensão"
+        title={t('nodes.title')}
+        subtitle={t('nodes.subtitle')}
         actions={
           <div className="flex items-center gap-3">
             <ExtensionSelector value={selectedExt} onChange={setSelectedExt} />
             <Button onClick={() => setShowForm(true)} disabled={!selectedExt} className="font-mono text-xs gap-2">
-              <Plus className="w-3.5 h-3.5" /> Novo Nó
+              <Plus className="w-3.5 h-3.5" /> {t('nodes.newNode')}
             </Button>
           </div>
         }
@@ -73,9 +75,9 @@ export default function Nodes() {
 
       <div className="p-6">
         {!selectedExt ? (
-          <EmptyState icon={Server} title="Selecione uma extensão" description="Escolha uma extensão acima para ver e gerenciar seus nós." />
+          <EmptyState icon={Server} title={t('nodes.selectExtension')} description={t('nodes.selectExtensionDesc')} />
         ) : nodes.length === 0 && !isLoading ? (
-          <EmptyState icon={Server} title="Nenhum nó" description="Adicione computadores à rede da sua extensão." actionLabel="Novo Nó" onAction={() => setShowForm(true)} />
+          <EmptyState icon={Server} title={t('nodes.noNodes')} description={t('nodes.noNodesDesc')} actionLabel={t('nodes.newNode')} onAction={() => setShowForm(true)} />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             <AnimatePresence>
@@ -94,14 +96,14 @@ export default function Nodes() {
                     <Badge variant="outline" className="font-mono text-[10px]">{node.node_type}</Badge>
                   </div>
                   <div className="flex items-center gap-3 text-xs font-mono text-muted-foreground mb-4">
-                    <span className="flex items-center gap-1"><Shield className="w-3 h-3" /> Seg: {node.security_level}</span>
-                    <span className="flex items-center gap-1"><Wifi className="w-3 h-3" /> Portas: {node.ports_required}</span>
-                    {node.has_proxy && <Badge className="bg-accent/20 text-accent text-[10px]">Proxy</Badge>}
-                    {node.has_firewall && <Badge className="bg-destructive/20 text-destructive text-[10px]">Firewall</Badge>}
+                    <span className="flex items-center gap-1"><Shield className="w-3 h-3" /> {t('nodes.securityAbbrev')}: {node.security_level}</span>
+                    <span className="flex items-center gap-1"><Wifi className="w-3 h-3" /> {t('nodes.portsAbbrev')}: {node.ports_required}</span>
+                    {node.has_proxy && <Badge className="bg-accent/20 text-accent text-[10px]">{t('nodes.proxy')}</Badge>}
+                    {node.has_firewall && <Badge className="bg-destructive/20 text-destructive text-[10px]">{t('nodes.firewall')}</Badge>}
                   </div>
                   <div className="flex gap-2">
                     <Button variant="ghost" size="sm" className="font-mono text-xs flex-1" onClick={() => openEdit(node)}>
-                      <Pencil className="w-3 h-3 mr-1" /> Editar
+                      <Pencil className="w-3 h-3 mr-1" /> {t('common.edit')}
                     </Button>
                     <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => setDeleteTarget(node)}>
                       <Trash2 className="w-3.5 h-3.5" />
@@ -117,47 +119,47 @@ export default function Nodes() {
       <Dialog open={showForm || !!editingNode} onOpenChange={closeDialog}>
         <DialogContent className="bg-card border-border sm:max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="font-sans">{editingNode ? 'Editar Nó' : 'Novo Nó'}</DialogTitle>
+            <DialogTitle className="font-sans">{editingNode ? t('nodes.editNode') : t('nodes.newNode')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="font-mono text-xs">ID do Nó</Label>
+                <Label className="font-mono text-xs">{t('nodes.nodeId')}</Label>
                 <Input value={form.node_id} onChange={(e) => updateForm('node_id', e.target.value)} placeholder="advExNode01" className="font-mono text-sm mt-1" />
               </div>
               <div>
-                <Label className="font-mono text-xs">Nome</Label>
+                <Label className="font-mono text-xs">{t('common.name')}</Label>
                 <Input value={form.name} onChange={(e) => updateForm('name', e.target.value)} placeholder="Servidor Corp" className="font-mono text-sm mt-1" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="font-mono text-xs">IP</Label>
+                <Label className="font-mono text-xs">{t('nodes.ip')}</Label>
                 <Input value={form.ip} onChange={(e) => updateForm('ip', e.target.value)} placeholder="100.100.100.10" className="font-mono text-sm mt-1" />
               </div>
               <div>
-                <Label className="font-mono text-xs">Senha Admin</Label>
+                <Label className="font-mono text-xs">{t('nodes.adminPass')}</Label>
                 <Input value={form.admin_pass} onChange={(e) => updateForm('admin_pass', e.target.value)} placeholder="password" className="font-mono text-sm mt-1" />
               </div>
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <Label className="font-mono text-xs">Segurança</Label>
+                <Label className="font-mono text-xs">{t('nodes.security')}</Label>
                 <Input type="number" min={1} max={5} value={form.security_level} onChange={(e) => updateForm('security_level', parseInt(e.target.value))} className="font-mono text-sm mt-1" />
               </div>
               <div>
-                <Label className="font-mono text-xs">Portas Req.</Label>
+                <Label className="font-mono text-xs">{t('nodes.portsRequired')}</Label>
                 <Input type="number" min={0} value={form.ports_required} onChange={(e) => updateForm('ports_required', parseInt(e.target.value))} className="font-mono text-sm mt-1" />
               </div>
               <div>
-                <Label className="font-mono text-xs">Trace Time</Label>
+                <Label className="font-mono text-xs">{t('nodes.traceTime')}</Label>
                 <Input type="number" value={form.trace_time} onChange={(e) => updateForm('trace_time', parseInt(e.target.value))} className="font-mono text-sm mt-1" />
               </div>
             </div>
             <div className="border border-border rounded-lg p-3 space-y-3">
-              <h4 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Campos do arquivo de nó (BlankExtension)</h4>
+              <h4 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">{t('nodes.nodeFields')}</h4>
               <div>
-                <Label className="font-mono text-xs">Portas</Label>
+                <Label className="font-mono text-xs">{t('nodes.ports')}</Label>
                 <Input
                   value={(form.ports || []).map(p => p.port_number).join(',')}
                   onChange={(e) => updateForm('ports', e.target.value.split(',').map(v => parseInt(v.trim())).filter(n => !Number.isNaN(n)).map(pn => ({ port_number: pn, cracked: false })))}
@@ -166,7 +168,7 @@ export default function Nodes() {
                 />
               </div>
               <div>
-                <Label className="font-mono text-xs">Arquivos (path|name|content por linha)</Label>
+                <Label className="font-mono text-xs">{t('nodes.files')}</Label>
                 <Textarea
                   value={(form.files || []).map(f => `${f.path || 'home'}|${f.name}|${f.content || ''}`).join('\n')}
                   onChange={(e) => updateForm('files', e.target.value.split('\n').filter(Boolean).map(line => {
@@ -175,19 +177,19 @@ export default function Nodes() {
                   }))}
                   className="font-mono text-sm mt-1 h-24"
                 />
-                <p className="text-[10px] text-muted-foreground">Formato: path|name|content (cada arquivo em uma linha)</p>
+                <p className="text-[10px] text-muted-foreground">{t('nodes.filesFormat')}</p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="font-mono text-xs">Ícone</Label>
+                <Label className="font-mono text-xs">{t('nodes.icon')}</Label>
                 <Select value={form.icon} onValueChange={(v) => updateForm('icon', v)}>
                   <SelectTrigger className="mt-1 font-mono text-xs"><SelectValue /></SelectTrigger>
                   <SelectContent>{iconOptions.map(i => <SelectItem key={i} value={i} className="font-mono text-xs">{i}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               <div>
-                <Label className="font-mono text-xs">Tipo</Label>
+                <Label className="font-mono text-xs">{t('nodes.type')}</Label>
                 <Select value={form.node_type} onValueChange={(v) => updateForm('node_type', v)}>
                   <SelectTrigger className="mt-1 font-mono text-xs"><SelectValue /></SelectTrigger>
                   <SelectContent>{typeOptions.map(t => <SelectItem key={t} value={t} className="font-mono text-xs">{t}</SelectItem>)}</SelectContent>
@@ -196,35 +198,35 @@ export default function Nodes() {
             </div>
             <div className="space-y-3 border border-border rounded-lg p-3">
               <div className="flex items-center justify-between">
-                <Label className="font-mono text-xs">Proxy</Label>
+                <Label className="font-mono text-xs">{t('nodes.proxy')}</Label>
                 <Switch checked={form.has_proxy} onCheckedChange={(v) => updateForm('has_proxy', v)} />
               </div>
               {form.has_proxy && (
                 <div>
-                  <Label className="font-mono text-xs">Tempo do Proxy (s)</Label>
+                  <Label className="font-mono text-xs">{t('nodes.proxyTime')}</Label>
                   <Input type="number" value={form.proxy_time} onChange={(e) => updateForm('proxy_time', parseInt(e.target.value))} className="font-mono text-sm mt-1" />
                 </div>
               )}
               <div className="flex items-center justify-between">
-                <Label className="font-mono text-xs">Firewall</Label>
+                <Label className="font-mono text-xs">{t('nodes.firewall')}</Label>
                 <Switch checked={form.has_firewall} onCheckedChange={(v) => updateForm('has_firewall', v)} />
               </div>
               {form.has_firewall && (
                 <div>
-                  <Label className="font-mono text-xs">Nível do Firewall</Label>
+                  <Label className="font-mono text-xs">{t('nodes.firewallLevel')}</Label>
                   <Input type="number" value={form.firewall_level} onChange={(e) => updateForm('firewall_level', parseInt(e.target.value))} className="font-mono text-sm mt-1" />
                 </div>
               )}
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={closeDialog} className="font-mono text-xs">Cancelar</Button>
-            <Button onClick={handleSubmit} disabled={!form.node_id || !form.name} className="font-mono text-xs">{editingNode ? 'Salvar' : 'Criar'}</Button>
+            <Button variant="outline" onClick={closeDialog} className="font-mono text-xs">{t('common.cancel')}</Button>
+            <Button onClick={handleSubmit} disabled={!form.node_id || !form.name} className="font-mono text-xs">{editingNode ? t('common.save') : t('common.create')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      <DeleteConfirmDialog open={!!deleteTarget} onClose={() => setDeleteTarget(null)} onConfirm={() => { deleteMut.mutate(deleteTarget.id); setDeleteTarget(null); }} title={`Excluir nó "${deleteTarget?.name}"?`} />
+      <DeleteConfirmDialog open={!!deleteTarget} onClose={() => setDeleteTarget(null)} onConfirm={() => { deleteMut.mutate(deleteTarget.id); setDeleteTarget(null); }} title={`${t('nodes.deleteNode')} "${deleteTarget?.name}"?`} />
     </div>
   );
 }

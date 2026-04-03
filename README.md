@@ -8,6 +8,7 @@ Features:
 - CRUD for missions, nodes, factions, actions, scripts, and more.
 - Offline local storage persistence with SQLite in `localStorage`.
 - Seed data generation on first run.
+- Multilingual support (English and Portuguese).
 - Open-source friendly and easy to adapt for custom Hacknet mod content.
 
 View the app at the local Vite URL (default `http://localhost:5173`).

@@ -15,6 +15,7 @@ import TerminalHeader from '@/components/shared/TerminalHeader';
 import ExtensionSelector from '@/components/shared/ExtensionSelector';
 import EmptyState from '@/components/shared/EmptyState';
 import DeleteConfirmDialog from '@/components/shared/DeleteConfirmDialog';
+import { useTranslation } from 'react-i18next';
 
 const ACTION_TYPES = [
   'LoadMission', 'RunFunction', 'AddAsset', 'CopyAsset',
@@ -47,21 +48,22 @@ const defaultAction = {
 };
 
 function ActionFields({ form, updateForm, factions }) {
-  const t = form.action_type;
+  const { t } = useTranslation();
+  const actionType = form.action_type;
   return (
     <div className="space-y-3">
       {/* Common: delay + delay_host + target_comp */}
       <div className="grid grid-cols-3 gap-3">
         <div>
-          <Label className="font-mono text-xs">Delay (s)</Label>
+          <Label className="font-mono text-xs">{t('actions.delay')}</Label>
           <Input type="number" step="0.1" value={form.delay} onChange={e => updateForm('delay', parseFloat(e.target.value))} className="font-mono text-sm mt-1" />
         </div>
         <div>
-          <Label className="font-mono text-xs">Delay Host (ID nó)</Label>
+          <Label className="font-mono text-xs">{t('actions.delayHost')}</Label>
           <Input value={form.delay_host} onChange={e => updateForm('delay_host', e.target.value)} placeholder="advExamplePC" className="font-mono text-sm mt-1" />
         </div>
         <div>
-          <Label className="font-mono text-xs">Facção</Label>
+          <Label className="font-mono text-xs">{t('actions.faction')}</Label>
           <Select value={form.faction_id} onValueChange={v => updateForm('faction_id', v)}>
             <SelectTrigger className="mt-1 font-mono text-xs"><SelectValue placeholder="Qualquer" /></SelectTrigger>
             <SelectContent>
@@ -146,87 +148,87 @@ function ActionFields({ form, updateForm, factions }) {
         </div>
       )}
 
-      {(t === 'CrashComputer') && (
+      {(form.action_type === 'CrashComputer') && (
         <div className="grid grid-cols-2 gap-3">
-          <div><Label className="font-mono text-xs">Nó Alvo</Label>
+          <div><Label className="font-mono text-xs">{t('actions.targetComp')}</Label>
             <Input value={form.target_comp} onChange={e => updateForm('target_comp', e.target.value)} placeholder="playerComp" className="font-mono text-sm mt-1" /></div>
-          <div><Label className="font-mono text-xs">Source (crash log)</Label>
+          <div><Label className="font-mono text-xs">{t('actions.sourceComp')}</Label>
             <Input value={form.source_comp} onChange={e => updateForm('source_comp', e.target.value)} className="font-mono text-sm mt-1" /></div>
         </div>
       )}
 
-      {t === 'DeleteFile' && (
+      {form.action_type === 'DeleteFile' && (
         <div className="grid grid-cols-3 gap-3">
-          <div><Label className="font-mono text-xs">Nó Alvo</Label>
+          <div><Label className="font-mono text-xs">{t('actions.targetComp')}</Label>
             <Input value={form.target_comp} onChange={e => updateForm('target_comp', e.target.value)} className="font-mono text-sm mt-1" /></div>
-          <div><Label className="font-mono text-xs">Caminho</Label>
+          <div><Label className="font-mono text-xs">{t('actions.filePath')}</Label>
             <Input value={form.file_path} onChange={e => updateForm('file_path', e.target.value)} placeholder="bin" className="font-mono text-sm mt-1" /></div>
-          <div><Label className="font-mono text-xs">Arquivo</Label>
+          <div><Label className="font-mono text-xs">{t('actions.fileName')}</Label>
             <Input value={form.file_name} onChange={e => updateForm('file_name', e.target.value)} className="font-mono text-sm mt-1" /></div>
         </div>
       )}
 
-      {t === 'SwitchToTheme' && (
+      {form.action_type === 'SwitchToTheme' && (
         <div className="grid grid-cols-2 gap-3">
-          <div><Label className="font-mono text-xs">Tema (nome ou caminho)</Label>
+          <div><Label className="font-mono text-xs">{t('actions.themePath')}</Label>
             <Input value={form.theme_path} onChange={e => updateForm('theme_path', e.target.value)} placeholder="HackerGreen" className="font-mono text-sm mt-1" /></div>
-          <div><Label className="font-mono text-xs">Flicker Duration (s)</Label>
+          <div><Label className="font-mono text-xs">{t('actions.flickerDuration')}</Label>
             <Input type="number" step="0.5" value={form.flicker_duration} onChange={e => updateForm('flicker_duration', parseFloat(e.target.value))} className="font-mono text-sm mt-1" /></div>
         </div>
       )}
 
-      {t === 'LaunchHackScript' && (
+      {form.action_type === 'LaunchHackScript' && (
         <div className="space-y-3">
-          <div><Label className="font-mono text-xs">Caminho do Script</Label>
+          <div><Label className="font-mono text-xs">{t('actions.scriptFilepath')}</Label>
             <Input value={form.script_filepath} onChange={e => updateForm('script_filepath', e.target.value)} placeholder="HackerScripts/ExampleHack.txt" className="font-mono text-sm mt-1" /></div>
           <div className="grid grid-cols-2 gap-3">
-            <div><Label className="font-mono text-xs">Source Comp</Label>
+            <div><Label className="font-mono text-xs">{t('actions.sourceComp')}</Label>
               <Input value={form.source_comp} onChange={e => updateForm('source_comp', e.target.value)} className="font-mono text-sm mt-1" /></div>
-            <div><Label className="font-mono text-xs">Target Comp</Label>
+            <div><Label className="font-mono text-xs">{t('actions.targetComp')}</Label>
               <Input value={form.target_comp} onChange={e => updateForm('target_comp', e.target.value)} placeholder="playerComp" className="font-mono text-sm mt-1" /></div>
           </div>
           <div className="flex items-center justify-between">
-            <Label className="font-mono text-xs">Requer logs na fonte</Label>
+            <Label className="font-mono text-xs">{t('actions.requireLogsOnSource')}</Label>
             <Switch checked={form.require_logs_on_source} onCheckedChange={v => updateForm('require_logs_on_source', v)} />
           </div>
         </div>
       )}
 
-      {t === 'StartScreenBleedEffect' && (
+      {form.action_type === 'StartScreenBleedEffect' && (
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
-            <div><Label className="font-mono text-xs">Título do Alerta</Label>
+            <div><Label className="font-mono text-xs">{t('actions.alertTitle')}</Label>
               <Input value={form.alert_title} onChange={e => updateForm('alert_title', e.target.value)} className="font-mono text-sm mt-1" /></div>
-            <div><Label className="font-mono text-xs">Duração Total (s)</Label>
+            <div><Label className="font-mono text-xs">{t('actions.totalDuration')}</Label>
               <Input type="number" value={form.total_duration} onChange={e => updateForm('total_duration', parseFloat(e.target.value))} className="font-mono text-sm mt-1" /></div>
           </div>
-          <div><Label className="font-mono text-xs">Conteúdo (3 linhas)</Label>
+          <div><Label className="font-mono text-xs">{t('actions.content')}</Label>
             <Textarea value={form.content} onChange={e => updateForm('content', e.target.value)} className="font-mono text-sm mt-1 h-16" /></div>
         </div>
       )}
 
-      {(t === 'AppendToFile') && (
+      {(form.action_type === 'AppendToFile') && (
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
-            <div><Label className="font-mono text-xs">Nó Alvo</Label>
+            <div><Label className="font-mono text-xs">{t('actions.targetComp')}</Label>
               <Input value={form.target_comp} onChange={e => updateForm('target_comp', e.target.value)} className="font-mono text-sm mt-1" /></div>
-            <div><Label className="font-mono text-xs">Arquivo</Label>
+            <div><Label className="font-mono text-xs">{t('actions.fileName')}</Label>
               <Input value={form.file_name} onChange={e => updateForm('file_name', e.target.value)} className="font-mono text-sm mt-1" /></div>
           </div>
-          <div><Label className="font-mono text-xs">Caminho</Label>
+          <div><Label className="font-mono text-xs">{t('actions.filePath')}</Label>
             <Input value={form.file_path} onChange={e => updateForm('file_path', e.target.value)} className="font-mono text-sm mt-1" /></div>
-          <div><Label className="font-mono text-xs">Conteúdo a Adicionar</Label>
+          <div><Label className="font-mono text-xs">{t('actions.contentToAdd')}</Label>
             <Input value={form.content} onChange={e => updateForm('content', e.target.value)} placeholder="#PLAYER_IP#" className="font-mono text-sm mt-1" /></div>
         </div>
       )}
 
-      {t === 'KillExe' && (
-        <div><Label className="font-mono text-xs">Nome do Exe (ou * para todos)</Label>
+      {form.action_type === 'KillExe' && (
+        <div><Label className="font-mono text-xs">{t('actions.exeName')}</Label>
           <Input value={form.exe_name} onChange={e => updateForm('exe_name', e.target.value)} placeholder="ssh" className="font-mono text-sm mt-1" /></div>
       )}
 
-      {t === 'AddConditionalActions' && (
-        <div><Label className="font-mono text-xs">Caminho do Arquivo de Ações</Label>
+      {form.action_type === 'AddConditionalActions' && (
+        <div><Label className="font-mono text-xs">{t('actions.actionsFilePath')}</Label>
           <Input value={form.script_filepath} onChange={e => updateForm('script_filepath', e.target.value)} placeholder="Actions/MyActions.xml" className="font-mono text-sm mt-1" /></div>
       )}
     </div>
@@ -273,16 +275,18 @@ export default function Actions() {
   };
   const updateForm = (key, val) => setForm(p => ({ ...p, [key]: val }));
 
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen">
       <TerminalHeader
-        title="Actions"
-        subtitle="Ações disparadas por facções e eventos"
+        title={t('actions.title')}
+        subtitle={t('actions.subtitle')}
         actions={
           <div className="flex items-center gap-3">
             <ExtensionSelector value={selectedExt} onChange={setSelectedExt} />
             <Button onClick={() => setShowForm(true)} disabled={!selectedExt} className="font-mono text-xs gap-2">
-              <Plus className="w-3.5 h-3.5" /> Nova Action
+              <Plus className="w-3.5 h-3.5" /> {t('actions.newAction')}
             </Button>
           </div>
         }
@@ -290,9 +294,9 @@ export default function Actions() {
 
       <div className="p-6">
         {!selectedExt ? (
-          <EmptyState icon={Zap} title="Selecione uma extensão" description="Escolha uma extensão para gerenciar Actions." />
+          <EmptyState icon={Zap} title={t('actions.selectExtension')} description={t('actions.selectExtensionDesc')} />
         ) : actions.length === 0 && !isLoading ? (
-          <EmptyState icon={Zap} title="Nenhuma Action" description="Crie ações disparadas por facções ou eventos." actionLabel="Nova Action" onAction={() => setShowForm(true)} />
+          <EmptyState icon={Zap} title={t('actions.noActions')} description={t('actions.noActionsDesc')} actionLabel={t('actions.newAction')} onAction={() => setShowForm(true)} />
         ) : (
           <div className="space-y-2">
             <AnimatePresence>
@@ -302,7 +306,7 @@ export default function Actions() {
                   <div className="flex items-center gap-3 min-w-0">
                     <Zap className="w-4 h-4 text-primary flex-shrink-0" />
                     <Badge className={`font-mono text-[10px] flex-shrink-0 ${ACTION_COLORS[a.action_type] || 'bg-muted text-muted-foreground'}`}>{a.action_type}</Badge>
-                    {a.faction_id && <span className="font-mono text-xs text-muted-foreground truncate">Facção: {a.faction_id}</span>}
+                    {a.faction_id && <span className="font-mono text-xs text-muted-foreground truncate">{t('actions.faction')}: {a.faction_id}</span>}
                     <span className="font-mono text-xs text-muted-foreground">val≥{a.value_required ?? 0}</span>
                     {a.delay > 0 && <span className="font-mono text-xs text-muted-foreground">+{a.delay}s</span>}
                     {a.target_comp && <span className="font-mono text-xs text-muted-foreground truncate">→ {a.target_comp}</span>}
@@ -323,34 +327,34 @@ export default function Actions() {
       <Dialog open={showForm || !!editing} onOpenChange={close}>
         <DialogContent className="bg-card border-border sm:max-w-xl max-h-[85vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="font-sans">{editing ? 'Editar Action' : 'Nova Action'}</DialogTitle>
+            <DialogTitle className="font-sans">{editing ? t('actions.editAction') : t('actions.newAction')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="font-mono text-xs">Tipo de Ação</Label>
+                <Label className="font-mono text-xs">{t('actions.actionType')}</Label>
                 <Select value={form.action_type} onValueChange={v => updateForm('action_type', v)}>
                   <SelectTrigger className="mt-1 font-mono text-xs"><SelectValue /></SelectTrigger>
                   <SelectContent>{ACTION_TYPES.map(t => <SelectItem key={t} value={t} className="font-mono text-xs">{t}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               <div>
-                <Label className="font-mono text-xs">Value Required (facção)</Label>
+                <Label className="font-mono text-xs">{t('actions.valueRequired')}</Label>
                 <Input type="number" value={form.value_required} onChange={e => updateForm('value_required', parseInt(e.target.value))} className="font-mono text-sm mt-1" />
               </div>
             </div>
             <ActionFields form={form} updateForm={updateForm} factions={factions} />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={close} className="font-mono text-xs">Cancelar</Button>
-            <Button onClick={handleSubmit} className="font-mono text-xs">{editing ? 'Salvar' : 'Criar'}</Button>
+            <Button variant="outline" onClick={close} className="font-mono text-xs">{t('common.cancel')}</Button>
+            <Button onClick={handleSubmit} className="font-mono text-xs">{editing ? t('common.save') : t('common.create')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       <DeleteConfirmDialog open={!!deleteTarget} onClose={() => setDeleteTarget(null)}
         onConfirm={() => { deleteMut.mutate(deleteTarget.id); setDeleteTarget(null); }}
-        title={`Excluir action "${deleteTarget?.action_type}"?`} />
+        title={t('actions.deleteConfirm', { actionType: deleteTarget?.action_type })} />
     </div>
   );
 }

@@ -3,21 +3,24 @@ import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Server, Target, Users, Download, ChevronLeft, ChevronRight, Terminal, Zap, User, Network, Code } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const navItems = [
-  { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
-  { path: '/nodes', icon: Server, label: 'Nós' },
-  { path: '/people', icon: User, label: 'People' },
-  { path: '/web', icon: Network, label: 'Web' },
-  { path: '/missions', icon: Target, label: 'Missões' },
-  { path: '/factions', icon: Users, label: 'Facções' },
-  { path: '/actions', icon: Zap, label: 'Actions' },
-  { path: '/hackerscripts', icon: Code, label: 'HackerScripts' },
-  { path: '/export', icon: Download, label: 'Exportar' },
+  { path: '/', icon: LayoutDashboard, key: 'navigation.dashboard' },
+  { path: '/nodes', icon: Server, key: 'navigation.nodes' },
+  { path: '/people', icon: User, key: 'navigation.people' },
+  { path: '/web', icon: Network, key: 'navigation.web' },
+  { path: '/missions', icon: Target, key: 'navigation.missions' },
+  { path: '/factions', icon: Users, key: 'navigation.factions' },
+  { path: '/actions', icon: Zap, key: 'navigation.actions' },
+  { path: '/hackerscripts', icon: Code, key: 'navigation.hackerScripts' },
+  { path: '/export', icon: Download, key: 'navigation.export' },
 ];
 
 export default function Sidebar({ collapsed, setCollapsed }) {
   const location = useLocation();
+  const { t, i18n } = useTranslation();
 
   return (
     <motion.aside
@@ -41,7 +44,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
       </div>
 
       <nav className="flex-1 p-2 space-y-1">
-        {navItems.map(({ path, icon: Icon, label }) => {
+        {navItems.map(({ path, icon: Icon, key }) => {
           const isActive = location.pathname === path;
           return (
             <Link
@@ -55,12 +58,24 @@ export default function Sidebar({ collapsed, setCollapsed }) {
               )}
             >
               <Icon className="w-4 h-4 flex-shrink-0" />
-              {!collapsed && <span>{label}</span>}
+              {!collapsed && <span>{t(key)}</span>}
             </Link>
           );
         })}
       </nav>
-
+      {!collapsed && (
+        <div className="p-2 border-t border-border">
+          <Select value={i18n.language} onValueChange={(lang) => i18n.changeLanguage(lang)}>
+            <SelectTrigger className="w-full font-mono text-xs">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="en">English</SelectItem>
+              <SelectItem value="pt">Português</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
       <button
         onClick={() => setCollapsed(!collapsed)}
         className="p-3 border-t border-border text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center"

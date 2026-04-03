@@ -14,6 +14,7 @@ import TerminalHeader from '@/components/shared/TerminalHeader';
 import ExtensionSelector from '@/components/shared/ExtensionSelector';
 import EmptyState from '@/components/shared/EmptyState';
 import DeleteConfirmDialog from '@/components/shared/DeleteConfirmDialog';
+import { useTranslation } from 'react-i18next';
 
 const CMD_TYPES = ['delay', 'connect', 'openPort', 'delete', 'reboot', 'forkbomb', 'disconnect', 'systakeover', 'clearTerminal', 'write', 'writel', 'hideNetMap', 'hideRam', 'hideDisplay', 'stopMusic', 'trackseq', 'instanttrace', 'flash'];
 const CMD_ARGS = {
@@ -79,6 +80,8 @@ export default function HackerScripts() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['scripts'] }),
   });
 
+  const { t } = useTranslation();
+
   const close = () => { setShowForm(false); setEditing(null); setForm(defaultScript); setNewCmd(defaultCmd); };
   const openEdit = (s) => { setEditing(s); setForm({ ...defaultScript, ...s, commands: s.commands || [] }); };
   const handleSubmit = () => {
@@ -119,13 +122,13 @@ export default function HackerScripts() {
   return (
     <div className="min-h-screen">
       <TerminalHeader
-        title="HackerScripts"
-        subtitle="Scripts de ataque e automação para NPCs"
+        title={t('hackerScripts.title')}
+        subtitle={t('hackerScripts.subtitle')}
         actions={
           <div className="flex items-center gap-3">
             <ExtensionSelector value={selectedExt} onChange={setSelectedExt} />
             <Button onClick={() => setShowForm(true)} disabled={!selectedExt} className="font-mono text-xs gap-2">
-              <Plus className="w-3.5 h-3.5" /> Novo Script
+              <Plus className="w-3.5 h-3.5" /> {t('hackerScripts.newScript')}
             </Button>
           </div>
         }
@@ -133,9 +136,9 @@ export default function HackerScripts() {
 
       <div className="p-6">
         {!selectedExt ? (
-          <EmptyState icon={Code} title="Selecione uma extensão" description="Escolha uma extensão para gerenciar HackerScripts." />
+          <EmptyState icon={Code} title={t('hackerScripts.selectExtension')} description={t('hackerScripts.selectExtensionDesc')} />
         ) : scripts.length === 0 && !isLoading ? (
-          <EmptyState icon={Code} title="Nenhum script" description="Crie scripts de hack para NPCs atacarem o jogador." actionLabel="Novo Script" onAction={() => setShowForm(true)} />
+          <EmptyState icon={Code} title={t('hackerScripts.noScripts')} description={t('hackerScripts.noScriptsDesc')} actionLabel={t('hackerScripts.newScript')} onAction={() => setShowForm(true)} />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <AnimatePresence>
@@ -173,28 +176,28 @@ export default function HackerScripts() {
       <Dialog open={showForm || !!editing} onOpenChange={close}>
         <DialogContent className="bg-card border-border sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="font-sans">{editing ? 'Editar Script' : 'Novo HackerScript'}</DialogTitle>
+            <DialogTitle className="font-sans">{editing ? t('hackerScripts.editScript') : t('hackerScripts.newScript')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="font-mono text-xs">Nome do Script</Label>
+                <Label className="font-mono text-xs">{t('hackerScripts.scriptName')}</Label>
                 <Input value={form.script_name} onChange={e => upd('script_name', e.target.value)} placeholder="ExampleHack" className="font-mono text-sm mt-1" />
               </div>
               <div>
-                <Label className="font-mono text-xs">Descrição</Label>
+                <Label className="font-mono text-xs">{t('hackerScripts.description')}</Label>
                 <Input value={form.description} onChange={e => upd('description', e.target.value)} className="font-mono text-sm mt-1" />
               </div>
             </div>
             <div className="border border-border rounded-lg p-3 space-y-3">
-              <h4 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Configuração (config)</h4>
+              <h4 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">{t('hackerScripts.configuration')}</h4>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label className="font-mono text-xs">Alvo (nome ou IP)</Label>
+                  <Label className="font-mono text-xs">{t('hackerScripts.target')}</Label>
                   <Input value={form.target_comp_name_or_ip} onChange={e => upd('target_comp_name_or_ip', e.target.value)} placeholder="advExamplePC" className="font-mono text-sm mt-1" />
                 </div>
                 <div>
-                  <Label className="font-mono text-xs">Delay inicial (s)</Label>
+                  <Label className="font-mono text-xs">{t('hackerScripts.initialDelay')}</Label>
                   <Input type="number" step="0.5" value={form.config_delay} onChange={e => upd('config_delay', parseFloat(e.target.value))} className="font-mono text-sm mt-1" />
                 </div>
               </div>
@@ -202,9 +205,9 @@ export default function HackerScripts() {
 
             {/* Commands list */}
             <div className="border border-border rounded-lg p-3 space-y-2">
-              <h4 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Comandos</h4>
+              <h4 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">{t('hackerScripts.commands')}</h4>
               {(form.commands || []).length === 0 && (
-                <p className="text-xs font-mono text-muted-foreground">Nenhum comando. Adicione abaixo.</p>
+                <p className="text-xs font-mono text-muted-foreground">{t('hackerScripts.noCommands')}</p>
               )}
               <AnimatePresence>
                 {(form.commands || []).map((cmd, idx) => (
@@ -249,20 +252,20 @@ export default function HackerScripts() {
 
             {/* Live preview */}
             <div>
-              <Label className="font-mono text-xs text-muted-foreground">Preview do arquivo</Label>
+              <Label className="font-mono text-xs text-muted-foreground">{t('hackerScripts.filePreview')}</Label>
               <div className="mt-1"><ScriptPreview script={form} /></div>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={close} className="font-mono text-xs">Cancelar</Button>
-            <Button onClick={handleSubmit} disabled={!form.script_name} className="font-mono text-xs">{editing ? 'Salvar' : 'Criar'}</Button>
+            <Button variant="outline" onClick={close} className="font-mono text-xs">{t('common.cancel')}</Button>
+            <Button onClick={handleSubmit} disabled={!form.script_name} className="font-mono text-xs">{editing ? t('common.save') : t('common.create')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       <DeleteConfirmDialog open={!!deleteTarget} onClose={() => setDeleteTarget(null)}
         onConfirm={() => { deleteMut.mutate(deleteTarget.id); setDeleteTarget(null); }}
-        title={`Excluir script "${deleteTarget?.script_name}"?`} />
+        title={t('hackerScripts.deleteConfirm', { scriptName: deleteTarget?.script_name })} />
     </div>
   );
 }

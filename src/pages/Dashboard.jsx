@@ -15,11 +15,13 @@ import TerminalHeader from '@/components/shared/TerminalHeader';
 import StatCard from '@/components/shared/StatCard';
 import EmptyState from '@/components/shared/EmptyState';
 import DeleteConfirmDialog from '@/components/shared/DeleteConfirmDialog';
+import { useTranslation } from 'react-i18next';
 
 const statusLabels = { draft: 'Rascunho', in_progress: 'Em Progresso', completed: 'Completa' };
 const statusColors = { draft: 'bg-muted text-muted-foreground', in_progress: 'bg-accent/20 text-accent', completed: 'bg-primary/20 text-primary' };
 
 export default function Dashboard() {
+  const { t } = useTranslation();
   const [showCreate, setShowCreate] = useState(false);
   const [editingExt, setEditingExt] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
@@ -139,29 +141,29 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen">
       <TerminalHeader
-        title="Dashboard"
-        subtitle="Gerencie suas extensões Hacknet"
+        title={t('dashboard.title')}
+        subtitle={t('dashboard.subtitle')}
         actions={
           <Button onClick={() => setShowCreate(true)} className="font-mono text-xs gap-2">
-            <Plus className="w-3.5 h-3.5" /> Nova Extensão
+            <Plus className="w-3.5 h-3.5" /> {t('dashboard.newExtension')}
           </Button>
         }
       />
 
       <div className="p-6 space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard icon={FolderOpen} label="Extensões" value={extensions.length} />
-          <StatCard icon={Server} label="Nós" value={nodes.length} />
-          <StatCard icon={Target} label="Missões" value={missions.length} />
-          <StatCard icon={Users} label="Facções" value={factions.length} />
+          <StatCard icon={FolderOpen} label={t('dashboard.extensions')} value={extensions.length} />
+          <StatCard icon={Server} label={t('dashboard.nodes')} value={nodes.length} />
+          <StatCard icon={Target} label={t('dashboard.missions')} value={missions.length} />
+          <StatCard icon={Users} label={t('dashboard.factions')} value={factions.length} />
         </div>
 
         {extensions.length === 0 && !isLoading ? (
           <EmptyState
             icon={FolderOpen}
-            title="Nenhuma extensão"
-            description="Crie sua primeira extensão Hacknet para começar a adicionar nós, missões e facções."
-            actionLabel="Nova Extensão"
+            title={t('dashboard.noExtensions')}
+            description={t('dashboard.noExtensionsDesc')}
+            actionLabel={t('dashboard.newExtension')}
             onAction={() => setShowCreate(true)}
           />
         ) : (
@@ -183,7 +185,7 @@ export default function Dashboard() {
                         <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{ext.description || 'Sem descrição'}</p>
                       </div>
                       <Badge className={`${statusColors[ext.status || 'draft']} font-mono text-[10px] ml-2 flex-shrink-0`}>
-                        {statusLabels[ext.status || 'draft']}
+                        {t(`status.${ext.status || 'draft'}`)}
                       </Badge>
                     </div>
                     <div className="flex items-center gap-4 text-xs font-mono text-muted-foreground mb-4">
@@ -193,7 +195,7 @@ export default function Dashboard() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Button variant="outline" size="sm" className="font-mono text-xs flex-1" onClick={() => navigate(`/nodes?ext=${ext.id}`)}>
-                        Abrir
+                        {t('common.open')}
                       </Button>
                       <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(ext)}>
                         <Pencil className="w-3.5 h-3.5" />
@@ -213,20 +215,20 @@ export default function Dashboard() {
       <Dialog open={showCreate || !!editingExt} onOpenChange={closeDialog}>
         <DialogContent className="bg-card border-border sm:max-w-md w-full max-h-[90vh] overflow-hidden">
           <DialogHeader>
-            <DialogTitle className="font-sans">{editingExt ? 'Editar Extensão' : 'Nova Extensão'}</DialogTitle>
+            <DialogTitle className="font-sans">{editingExt ? t('dashboard.editExtension') : t('dashboard.newExtension')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 overflow-y-auto max-h-[78vh] p-4">
             <div>
-              <Label className="font-mono text-xs">Nome</Label>
+              <Label className="font-mono text-xs">{t('common.name')}</Label>
               <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Minha Extensão" className="font-mono text-sm mt-1" />
             </div>
             <div>
-              <Label className="font-mono text-xs">Descrição</Label>
+              <Label className="font-mono text-xs">{t('common.description')}</Label>
               <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Sobre esta extensão..." className="font-mono text-sm mt-1 h-20" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="font-mono text-xs">Idioma</Label>
+                <Label className="font-mono text-xs">{t('dashboard.language')}</Label>
                 <Select value={form.language} onValueChange={(v) => setForm({ ...form, language: v })}>
                   <SelectTrigger className="mt-1 font-mono text-xs"><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -239,7 +241,7 @@ export default function Dashboard() {
                 </Select>
               </div>
               <div>
-                <Label className="font-mono text-xs">Tema</Label>
+                <Label className="font-mono text-xs">{t('dashboard.theme')}</Label>
                 <Select value={form.starting_theme} onValueChange={(v) => setForm({ ...form, starting_theme: v })}>
                   <SelectTrigger className="mt-1 font-mono text-xs"><SelectValue /></SelectTrigger>
                   <SelectContent>
