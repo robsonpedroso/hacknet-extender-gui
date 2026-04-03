@@ -13,6 +13,7 @@ import TerminalHeader from '@/components/shared/TerminalHeader';
 import ExtensionSelector from '@/components/shared/ExtensionSelector';
 import EmptyState from '@/components/shared/EmptyState';
 import DeleteConfirmDialog from '@/components/shared/DeleteConfirmDialog';
+import { useTranslation } from 'react-i18next';
 
 const ACCOUNT_TYPES = ['ADMIN', 'ALL', 'MAIL', 'MISSIONLIST'];
 const TYPE_LABELS = { ADMIN: 'Administrador', ALL: 'Completo', MAIL: 'Email', MISSIONLIST: 'Lista Missões' };
@@ -52,6 +53,8 @@ export default function People() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['people'] }),
   });
 
+  const { t } = useTranslation();
+
   const close = () => { setShowForm(false); setEditing(null); setForm(defaultPerson); };
   const openEdit = (p) => { setEditing(p); setForm({ ...defaultPerson, ...p }); };
   const handleSubmit = () => {
@@ -69,13 +72,13 @@ export default function People() {
   return (
     <div className="min-h-screen">
       <TerminalHeader
-        title="People"
-        subtitle="Contas de usuário nos computadores da rede"
+        title={t('people.title')}
+        subtitle={t('people.subtitle')}
         actions={
           <div className="flex items-center gap-3">
             <ExtensionSelector value={selectedExt} onChange={setSelectedExt} />
             <Button onClick={() => setShowForm(true)} disabled={!selectedExt} className="font-mono text-xs gap-2">
-              <Plus className="w-3.5 h-3.5" /> Nova Conta
+              <Plus className="w-3.5 h-3.5" /> {t('people.newAccount')}
             </Button>
           </div>
         }
@@ -83,9 +86,9 @@ export default function People() {
 
       <div className="p-6">
         {!selectedExt ? (
-          <EmptyState icon={User} title="Selecione uma extensão" description="Escolha uma extensão para gerenciar contas de usuário." />
+          <EmptyState icon={User} title={t('people.selectExtension')} description={t('people.selectExtensionDesc')} />
         ) : people.length === 0 && !isLoading ? (
-          <EmptyState icon={User} title="Nenhuma conta" description="Adicione contas de usuário aos computadores da rede." actionLabel="Nova Conta" onAction={() => setShowForm(true)} />
+          <EmptyState icon={User} title={t('people.noAccounts')} description={t('people.noAccountsDesc')} actionLabel={t('people.newAccount')} onAction={() => setShowForm(true)} />
         ) : (
           <div className="space-y-4">
             {/* Grouped by node */}
@@ -126,7 +129,7 @@ export default function People() {
             {/* Ungrouped */}
             {ungrouped.length > 0 && (
               <div className="space-y-2">
-                <h3 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Sem nó associado</h3>
+                <h3 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">{t('people.unassociated')}</h3>
                 <AnimatePresence>
                   {ungrouped.map(p => (
                     <motion.div key={p.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}
@@ -153,13 +156,13 @@ export default function People() {
       <Dialog open={showForm || !!editing} onOpenChange={close}>
         <DialogContent className="bg-card border-border sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="font-sans">{editing ? 'Editar Conta' : 'Nova Conta'}</DialogTitle>
+            <DialogTitle className="font-sans">{editing ? t('people.editAccount') : t('people.newAccount')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label className="font-mono text-xs">Nó (computador)</Label>
+              <Label className="font-mono text-xs">{t('people.node')}</Label>
               <Select value={form.node_id} onValueChange={v => setForm(p => ({ ...p, node_id: v }))}>
-                <SelectTrigger className="mt-1 font-mono text-xs"><SelectValue placeholder="Selecionar nó..." /></SelectTrigger>
+                <SelectTrigger className="mt-1 font-mono text-xs"><SelectValue placeholder={t('people.selectNode')} /></SelectTrigger>
                 <SelectContent>
                   {nodes.map(n => <SelectItem key={n.id} value={n.node_id} className="font-mono text-xs">{n.name} ({n.node_id})</SelectItem>)}
                 </SelectContent>
@@ -167,16 +170,16 @@ export default function People() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="font-mono text-xs">Usuário</Label>
+                <Label className="font-mono text-xs">{t('people.username')}</Label>
                 <Input value={form.username} onChange={e => setForm(p => ({ ...p, username: e.target.value }))} placeholder="Matt" className="font-mono text-sm mt-1" />
               </div>
               <div>
-                <Label className="font-mono text-xs">Senha</Label>
+                <Label className="font-mono text-xs">{t('people.password')}</Label>
                 <Input value={form.password} onChange={e => setForm(p => ({ ...p, password: e.target.value }))} placeholder="testpass" className="font-mono text-sm mt-1" />
               </div>
             </div>
             <div>
-              <Label className="font-mono text-xs">Tipo de Conta</Label>
+              <Label className="font-mono text-xs">{t('people.accountType')}</Label>
               <Select value={form.account_type} onValueChange={v => setForm(p => ({ ...p, account_type: v }))}>
                 <SelectTrigger className="mt-1 font-mono text-xs"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -190,15 +193,15 @@ export default function People() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={close} className="font-mono text-xs">Cancelar</Button>
-            <Button onClick={handleSubmit} disabled={!form.node_id || !form.username || !form.password} className="font-mono text-xs">{editing ? 'Salvar' : 'Criar'}</Button>
+            <Button variant="outline" onClick={close} className="font-mono text-xs">{t('common.cancel')}</Button>
+            <Button onClick={handleSubmit} disabled={!form.node_id || !form.username || !form.password} className="font-mono text-xs">{editing ? t('common.save') : t('common.create')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       <DeleteConfirmDialog open={!!deleteTarget} onClose={() => setDeleteTarget(null)}
         onConfirm={() => { deleteMut.mutate(deleteTarget.id); setDeleteTarget(null); }}
-        title={`Excluir conta "${deleteTarget?.username}"?`} />
+        title={t('people.deleteConfirm', { username: deleteTarget?.username })} />
     </div>
   );
 }

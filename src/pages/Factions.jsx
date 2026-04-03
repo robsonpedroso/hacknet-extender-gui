@@ -11,10 +11,12 @@ import TerminalHeader from '@/components/shared/TerminalHeader';
 import ExtensionSelector from '@/components/shared/ExtensionSelector';
 import EmptyState from '@/components/shared/EmptyState';
 import DeleteConfirmDialog from '@/components/shared/DeleteConfirmDialog';
+import { useTranslation } from 'react-i18next';
 
 const defaultFaction = { faction_id: '', name: '', player_value: 0, max_value: 100, neededValue: 0 };
 
 export default function Factions() {
+  const { t } = useTranslation();
   const urlParams = new URLSearchParams(window.location.search);
   const [selectedExt, setSelectedExt] = useState(urlParams.get('ext') || '');
   const [showForm, setShowForm] = useState(false);
@@ -52,13 +54,13 @@ export default function Factions() {
   return (
     <div className="min-h-screen">
       <TerminalHeader
-        title="Facções"
-        subtitle="Organizações e grupos da sua extensão"
+        title={t('factions.title')}
+        subtitle={t('factions.subtitle')}
         actions={
           <div className="flex items-center gap-3">
             <ExtensionSelector value={selectedExt} onChange={setSelectedExt} />
             <Button onClick={() => setShowForm(true)} disabled={!selectedExt} className="font-mono text-xs gap-2">
-              <Plus className="w-3.5 h-3.5" /> Nova Facção
+              <Plus className="w-3.5 h-3.5" /> {t('factions.newFaction')}
             </Button>
           </div>
         }
@@ -66,9 +68,9 @@ export default function Factions() {
 
       <div className="p-6">
         {!selectedExt ? (
-          <EmptyState icon={Users} title="Selecione uma extensão" description="Escolha uma extensão para gerenciar facções." />
+          <EmptyState icon={Users} title={t('factions.selectExtension')} description={t('factions.selectExtensionDesc')} />
         ) : factions.length === 0 && !isLoading ? (
-          <EmptyState icon={Users} title="Nenhuma facção" description="Crie facções para sua extensão." actionLabel="Nova Facção" onAction={() => setShowForm(true)} />
+          <EmptyState icon={Users} title={t('factions.noFactions')} description={t('factions.noFactionsDesc')} actionLabel={t('factions.newFaction')} onAction={() => setShowForm(true)} />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             <AnimatePresence>
@@ -87,7 +89,7 @@ export default function Factions() {
                   </div>
                   <div className="space-y-2 mb-4">
                     <div className="flex justify-between text-xs font-mono">
-                      <span className="text-muted-foreground">Reputação Inicial</span>
+                      <span className="text-muted-foreground">{t('factions.playerValue')}</span>
                       <span className="text-foreground">{f.player_value || 0}</span>
                     </div>
                     <div className="w-full bg-muted rounded-full h-1.5">
@@ -100,7 +102,7 @@ export default function Factions() {
                   </div>
                   <div className="flex gap-2">
                     <Button variant="ghost" size="sm" className="font-mono text-xs flex-1" onClick={() => openEdit(f)}>
-                      <Pencil className="w-3 h-3 mr-1" /> Editar
+                      <Pencil className="w-3 h-3 mr-1" /> {t('common.edit')}
                     </Button>
                     <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => setDeleteTarget(f)}>
                       <Trash2 className="w-3.5 h-3.5" />
@@ -116,42 +118,42 @@ export default function Factions() {
       <Dialog open={showForm || !!editingFaction} onOpenChange={closeDialog}>
         <DialogContent className="bg-card border-border sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="font-sans">{editingFaction ? 'Editar Facção' : 'Nova Facção'}</DialogTitle>
+            <DialogTitle className="font-sans">{editingFaction ? t('factions.editFaction') : t('factions.newFaction')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label className="font-mono text-xs">ID da Facção</Label>
+                <Label className="font-mono text-xs">{t('factions.factionId')}</Label>
                 <Input value={form.faction_id} onChange={(e) => updateForm('faction_id', e.target.value)} placeholder="entropy" className="font-mono text-sm mt-1" />
               </div>
               <div>
-                <Label className="font-mono text-xs">Nome</Label>
+                <Label className="font-mono text-xs">{t('common.name')}</Label>
                 <Input value={form.name} onChange={(e) => updateForm('name', e.target.value)} placeholder="Entropy" className="font-mono text-sm mt-1" />
               </div>
             </div>
             <div className="grid grid-cols-3 gap-3">
               <div>
-                <Label className="font-mono text-xs">Valor Inicial</Label>
+                <Label className="font-mono text-xs">{t('factions.playerValue')}</Label>
                 <Input type="number" value={form.player_value} onChange={(e) => updateForm('player_value', parseInt(e.target.value))} className="font-mono text-sm mt-1" />
               </div>
               <div>
-                <Label className="font-mono text-xs">Valor Máximo</Label>
+                <Label className="font-mono text-xs">{t('factions.maxValue')}</Label>
                 <Input type="number" value={form.max_value} onChange={(e) => updateForm('max_value', parseInt(e.target.value))} className="font-mono text-sm mt-1" />
               </div>
               <div>
-                <Label className="font-mono text-xs">Valor Necessário</Label>
+                <Label className="font-mono text-xs">{t('factions.neededValue')}</Label>
                 <Input type="number" value={form.neededValue} onChange={(e) => updateForm('neededValue', parseInt(e.target.value))} className="font-mono text-sm mt-1" />
               </div>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={closeDialog} className="font-mono text-xs">Cancelar</Button>
-            <Button onClick={handleSubmit} disabled={!form.faction_id || !form.name} className="font-mono text-xs">{editingFaction ? 'Salvar' : 'Criar'}</Button>
+            <Button variant="outline" onClick={closeDialog} className="font-mono text-xs">{t('common.cancel')}</Button>
+            <Button onClick={handleSubmit} disabled={!form.faction_id || !form.name} className="font-mono text-xs">{editingFaction ? t('common.save') : t('common.create')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      <DeleteConfirmDialog open={!!deleteTarget} onClose={() => setDeleteTarget(null)} onConfirm={() => { deleteMut.mutate(deleteTarget.id); setDeleteTarget(null); }} title={`Excluir facção "${deleteTarget?.name}"?`} />
+      <DeleteConfirmDialog open={!!deleteTarget} onClose={() => setDeleteTarget(null)} onConfirm={() => { deleteMut.mutate(deleteTarget.id); setDeleteTarget(null); }} title={`${t('factions.deleteFaction')} "${deleteTarget?.name}"?`} />
     </div>
   );
 }

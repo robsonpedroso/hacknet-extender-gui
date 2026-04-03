@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import TerminalHeader from '@/components/shared/TerminalHeader';
 import ExtensionSelector from '@/components/shared/ExtensionSelector';
 import EmptyState from '@/components/shared/EmptyState';
+import { useTranslation } from 'react-i18next';
 
 function generateExtensionXML(ext, nodes, missions, factions) {
   let xml = `<?xml version="1.0" encoding="utf-8"?>\n`;
@@ -231,6 +232,7 @@ function XMLBlock({ title, filename, content }) {
 
 export default function Export() {
   const [selectedExt, setSelectedExt] = useState('');
+  const { t } = useTranslation();
 
   const { data: extensions = [] } = useQuery({ queryKey: ['extensions'], queryFn: () => db.entities.Extension.list() });
   const { data: nodes = [] } = useQuery({
@@ -296,20 +298,20 @@ export default function Export() {
       a.click();
       URL.revokeObjectURL(url);
     });
-    toast.success(`${files.length} arquivos baixados!`);
+    toast.success(t('export.downloadSuccess', { count: files.length }));
   };
 
   return (
     <div className="min-h-screen">
       <TerminalHeader
-        title="Exportar"
-        subtitle="Gere os arquivos XML da sua extensão"
+        title={t('export.title')}
+        subtitle={t('export.subtitle')}
         actions={
           <div className="flex items-center gap-3">
             <ExtensionSelector value={selectedExt} onChange={setSelectedExt} />
             {ext && (
               <Button onClick={handleDownloadAll} className="font-mono text-xs gap-2">
-                <Download className="w-3.5 h-3.5" /> Baixar Tudo
+                <Download className="w-3.5 h-3.5" /> {t('export.downloadAll')}
               </Button>
             )}
           </div>
@@ -318,63 +320,63 @@ export default function Export() {
 
       <div className="p-6 space-y-4">
         {!selectedExt ? (
-          <EmptyState icon={Download} title="Selecione uma extensão" description="Escolha uma extensão para gerar os arquivos XML." />
+          <EmptyState icon={Download} title={t('export.selectExtension')} description={t('export.selectExtensionDesc')} />
         ) : (
           <>
             {ext && <XMLBlock title="ExtensionInfo" filename="ExtensionInfo.xml" content={generateExtensionXML(ext, nodes, missions, factions)} />}
 
             {nodes.length > 0 && (
               <div className="space-y-3">
-                <h3 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Nós ({nodes.length})</h3>
+                <h3 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">{t('export.nodes')} ({nodes.length})</h3>
                 {nodes.map(n => <XMLBlock key={n.id} title={n.name} filename={`${n.node_id}.xml`} content={generateNodeXML(n)} />)}
               </div>
             )}
 
             {missions.length > 0 && (
               <div className="space-y-3">
-                <h3 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Missões ({missions.length})</h3>
+                <h3 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">{t('export.missions')} ({missions.length})</h3>
                 {missions.map(m => <XMLBlock key={m.id} title={m.title} filename={`${m.mission_id}.xml`} content={generateMissionXML(m)} />)}
               </div>
             )}
 
             {factions.length > 0 && (
               <div className="space-y-3">
-                <h3 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Facções ({factions.length})</h3>
+                <h3 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">{t('export.factions')} ({factions.length})</h3>
                 {factions.map(f => <XMLBlock key={f.id} title={f.name} filename={`${f.faction_id}.xml`} content={generateFactionXML(f, missions)} />)}
               </div>
             )}
 
             {actions.length > 0 && (
               <div className="space-y-3">
-                <h3 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Actions ({actions.length})</h3>
+                <h3 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">{t('export.actions')} ({actions.length})</h3>
                 {actions.map(a => <XMLBlock key={a.id} title={`${a.action_type || a.id}`} filename={`${a.id}.xml`} content={generateNodeActionXML(a)} />)}
               </div>
             )}
 
             {links.length > 0 && (
               <div className="space-y-3">
-                <h3 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Links ({links.length})</h3>
+                <h3 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">{t('export.links')} ({links.length})</h3>
                 {links.map(l => <XMLBlock key={l.id} title={`${l.source_node_id} → ${l.target_node_id}`} filename={`${l.id}.xml`} content={generateNodeLinkXML(l)} />)}
               </div>
             )}
 
             {people.length > 0 && (
               <div className="space-y-3">
-                <h3 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">Contas ({people.length})</h3>
+                <h3 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">{t('export.accounts')} ({people.length})</h3>
                 {people.map(p => <XMLBlock key={p.id} title={`${p.username}@${p.node_id}`} filename={`${p.id}.xml`} content={generateNodePersonXML(p)} />)}
               </div>
             )}
 
             {scripts.length > 0 && (
               <div className="space-y-3">
-                <h3 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">HackerScripts ({scripts.length})</h3>
+                <h3 className="font-mono text-xs text-muted-foreground uppercase tracking-wider">{t('export.hackerScripts')} ({scripts.length})</h3>
                 {scripts.map(s => <XMLBlock key={s.id} title={s.script_name || s.id} filename={`${s.script_name || s.id}.xml`} content={generateHackerScriptXML(s)} />)}
               </div>
             )}
 
             {(nodes.length === 0 && missions.length === 0 && factions.length === 0 && actions.length === 0 && links.length === 0 && people.length === 0 && scripts.length === 0) && (
               <div className="text-center py-10">
-                <p className="text-muted-foreground text-sm">Esta extensão ainda não tem nós, missões, facções, ações, links, contas ou scripts.</p>
+                <p className="text-muted-foreground text-sm">{t('export.emptyExtension')}</p>
               </div>
             )}
           </>
